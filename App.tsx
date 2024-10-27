@@ -10,6 +10,9 @@ import Compass from './src/screens/Compass';
 import Profile from './src/screens/Profile';
 import SignUp from './src/screens/SignUp';
 import Success from './src/screens/Success';
+import { enableScreens } from 'react-native-screens';
+
+enableScreens();
 
 const Stack = createNativeStackNavigator();
 

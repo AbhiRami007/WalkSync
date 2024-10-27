@@ -17,7 +17,7 @@ const Success = ({navigation}: any) => {
         </Text>
       </View>
       <View>
-        <Image source={require('../assets/Sport.png')} style={styles.image}/>
+        <Image source={require('../assets/Sport.png')} style={styles.image} />
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Login')}>
@@ -43,13 +43,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 5,
-marginTop:20
+    marginTop: 20,
   },
   subtitle: {
     fontSize: 14,
     color: '#666',
     marginBottom: 20,
-marginTop:10
+    marginTop: 10,
   },
 
   button: {
@@ -65,10 +65,10 @@ marginTop:10
     fontWeight: '500',
     textAlign: 'center',
   },
-image: {
-  width: "100%", 
-  alignSelf: 'center', 
-  resizeMode: 'contain',
-marginBottom:30
-},
+  image: {
+    width: '100%',
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    marginBottom: 70,
+  },
 });

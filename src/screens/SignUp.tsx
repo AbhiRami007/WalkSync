@@ -59,13 +59,8 @@ const SignUp = ({navigation}: any) => {
 
   const handleRegister = () => {
     if (validateFields()) {
-      console.log('User registered:', {
-        fullName,
-        email,
-        calorieIntake,
-        weight,
-        height,
-      });
+			//add signup logic here
+      navigation.navigate('Success')
     }
   };
 

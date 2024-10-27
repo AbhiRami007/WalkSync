@@ -59,8 +59,8 @@ const SignUp = ({navigation}: any) => {
 
   const handleRegister = () => {
     if (validateFields()) {
-			//add signup logic here
-      navigation.navigate('Success')
+      //add signup logic here
+      navigation.navigate('Success');
     }
   };
 
@@ -82,79 +82,79 @@ const SignUp = ({navigation}: any) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Get Started</Text>
-      <Text style={styles.subtitle}>
-        Fill up the registration to get started with your fitness journey.
-      </Text>
+      <View>
+        <Text style={styles.heading}>Get Started</Text>
+        <Text style={styles.subtitle}>
+          Fill up the registration to get started with your fitness journey.
+        </Text>
+        <Text style={styles.label}>Full Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your full name"
+          value={fullName}
+          onChangeText={text => {
+            setFullName(text);
+            setErrors({...errors, fullName: ''});
+          }}
+        />
+        {errors.fullName && (
+          <Text style={styles.errorText}>{errors.fullName}</Text>
+        )}
 
-      <Text style={styles.label}>Full Name</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your full name"
-        value={fullName}
-        onChangeText={text => {
-          setFullName(text);
-          setErrors({...errors, fullName: ''});
-        }}
-      />
-      {errors.fullName && (
-        <Text style={styles.errorText}>{errors.fullName}</Text>
-      )}
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your email"
+          value={email}
+          onChangeText={text => {
+            setEmail(text);
+            setErrors({...errors, email: ''});
+          }}
+          keyboardType="email-address"
+        />
+        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your email"
-        value={email}
-        onChangeText={text => {
-          setEmail(text);
-          setErrors({...errors, email: ''});
-        }}
-        keyboardType="email-address"
-      />
-      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        <Text style={styles.label}>Daily Calorie Intake</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your daily calorie intake"
+          value={calorieIntake}
+          onChangeText={text => {
+            setCalorieIntake(text);
+            setErrors({...errors, calorieIntake: ''});
+          }}
+          keyboardType="numeric"
+        />
+        {errors.calorieIntake && (
+          <Text style={styles.errorText}>{errors.calorieIntake}</Text>
+        )}
 
-      <Text style={styles.label}>Daily Calorie Intake</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your daily calorie intake"
-        value={calorieIntake}
-        onChangeText={text => {
-          setCalorieIntake(text);
-          setErrors({...errors, calorieIntake: ''});
-        }}
-        keyboardType="numeric"
-      />
-      {errors.calorieIntake && (
-        <Text style={styles.errorText}>{errors.calorieIntake}</Text>
-      )}
+        <Text style={styles.label}>Current Weight (kg)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your current weight in kg"
+          value={weight}
+          onChangeText={text => {
+            setWeight(text);
+            setErrors({...errors, weight: ''});
+          }}
+          keyboardType="numeric"
+        />
+        {errors.weight && <Text style={styles.errorText}>{errors.weight}</Text>}
 
-      <Text style={styles.label}>Current Weight (kg)</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your current weight in kg"
-        value={weight}
-        onChangeText={text => {
-          setWeight(text);
-          setErrors({...errors, weight: ''});
-        }}
-        keyboardType="numeric"
-      />
-      {errors.weight && <Text style={styles.errorText}>{errors.weight}</Text>}
-
-      <Text style={styles.label}>Current Height (cm)</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your current height in cm"
-        value={height}
-        onChangeText={text => {
-          setHeight(text);
-          setErrors({...errors, height: ''});
-        }}
-        keyboardType="numeric"
-      />
-      {errors.height && <Text style={styles.errorText}>{errors.height}</Text>}
-
+        <Text style={styles.label}>Current Height (cm)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your current height in cm"
+          value={height}
+          onChangeText={text => {
+            setHeight(text);
+            setErrors({...errors, height: ''});
+          }}
+          keyboardType="numeric"
+        />
+        {errors.height && <Text style={styles.errorText}>{errors.height}</Text>}
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
           <Text style={styles.buttonText}>Cancel</Text>
@@ -175,20 +175,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
-    paddingTop: 0,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#f9f9f9',
   },
   heading: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 5,
+    marginBottom: 30,
   },
   subtitle: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   label: {
     fontSize: 14,

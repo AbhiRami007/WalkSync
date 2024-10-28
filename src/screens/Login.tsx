@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TextInput, Button, StyleSheet, Alert} from 'react-native';
 import axios from 'axios';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-const Login = ({ navigation }: any) => {
+const Login = ({navigation, setIsUserLoggedIn}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
+      setIsUserLoggedIn(true);
       navigation.navigate('Dashboard');
     } catch (error) {
       Alert.alert('Login Failed', 'Please check your credentials.');
@@ -37,5 +38,4 @@ const Login = ({ navigation }: any) => {
 
 export default Login;
 
-const styles = StyleSheet.create({
-});
+const styles = StyleSheet.create({});

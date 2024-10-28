@@ -7,13 +7,12 @@ import OnboardingStackNavigator from './src/navigation/OnBoardingStack';
 import MainStackNavigator from './src/navigation/MainStack';
 
 const App = () => {
-  // Replace with your authentication logic
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {isUserLoggedIn ? <MainStackNavigator /> : <OnboardingStackNavigator />}
+        {isUserLoggedIn ? <MainStackNavigator  setIsUserLoggedIn={setIsUserLoggedIn}/> : <OnboardingStackNavigator setIsUserLoggedIn={setIsUserLoggedIn}/>}
       </NavigationContainer>
     </SafeAreaProvider>
   );

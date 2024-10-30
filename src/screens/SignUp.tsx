@@ -114,6 +114,30 @@ const SignUp = ({navigation}: any) => {
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
+<Text style={styles.label}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter a Password"
+          value={email}
+          onChangeText={text => {
+            setPassword(text);
+            setErrors({...errors, password: ''});
+          }}
+        />
+        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+
+<Text style={styles.label}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter a Password"
+          value={email}
+          onChangeText={text => {
+            setPassword(text);
+            setErrors({...errors, password: ''});
+          }}
+        />
+        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+
         <Text style={styles.label}>Daily Calorie Intake</Text>
         <TextInput
           style={styles.input}
@@ -182,7 +206,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   subtitle: {
     fontSize: 14,

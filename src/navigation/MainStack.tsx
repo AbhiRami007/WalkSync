@@ -4,6 +4,7 @@ import Dashboard from '../screens/Dashboard';
 import ActivityLog from '../screens/ActivityLog';
 import Compass from '../screens/Compass';
 import Profile from '../screens/Profile';
+import EditProfile from '../screens/EditProfile';
 
 const MainStack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const MainStackNavigator = ({setIsUserLoggedIn}: any) => {
       <MainStack.Screen name="ActivityLog" component={ActivityLog} />
       <MainStack.Screen name="Compass" component={Compass} />
       <MainStack.Screen name="Profile" component={Profile} />
+      <MainStack.Screen name="Edit Profile" component={EditProfile} />
     </MainStack.Navigator>
   );
 };

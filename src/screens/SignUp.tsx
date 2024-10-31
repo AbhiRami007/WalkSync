@@ -5,7 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {signUpUser} from '../services/api.service';
 
 const SignUp = ({navigation}: any) => {
   const [fullName, setFullName] = useState('');
@@ -28,7 +32,6 @@ const SignUp = ({navigation}: any) => {
     let newErrors = {
       fullName: '',
       email: '',
-      calorieIntake: '',
       weight: '',
       height: '',
       password: '',
@@ -43,7 +46,6 @@ const SignUp = ({navigation}: any) => {
       newErrors.email = 'Email is required';
       valid = false;
     }
-    
     if (!weight.trim()) {
       newErrors.weight = 'Weight is required';
       valid = false;
@@ -61,18 +63,32 @@ const SignUp = ({navigation}: any) => {
       valid = false;
     }
     if (password !== confirmPassword) {
-      newErrors.password = 'Password and Confirm Password should match';
-      newErrors.confirmPassword = 'Password and Confirm Password should match';
+      newErrors.password = 'Passwords do not match';
+      newErrors.confirmPassword = 'Passwords do not match';
       valid = false;
     }
     setErrors(newErrors);
     return valid;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (validateFields()) {
-      //add signup logic here
-      navigation.navigate('Success');
+      try {
+        // await signUpUser({
+        //   fullName,
+        //   email,
+        //   password,
+        //   weight,
+        //   height,
+        // });
+const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+    const userId = userCredential.user.uid;
+
+        Alert.alert('Success', 'Registration successful!');
+        navigation.navigate('Success');
+      } catch (error: any) {
+        Alert.alert('Error', error.message);
+      }
     }
   };
 
@@ -81,6 +97,8 @@ const SignUp = ({navigation}: any) => {
     setEmail('');
     setWeight('');
     setHeight('');
+    setPassword('');
+    setConfirmPassword('');
     setErrors({
       fullName: '',
       email: '',
@@ -130,7 +148,8 @@ const SignUp = ({navigation}: any) => {
         <TextInput
           style={styles.input}
           placeholder="Enter a Password"
-          value={email}
+          value={password}
+secureTextEntry={true}
           onChangeText={text => {
             setPassword(text);
             setErrors({...errors, password: ''});
@@ -143,8 +162,9 @@ const SignUp = ({navigation}: any) => {
         <Text style={styles.label}>Confirm Password</Text>
         <TextInput
           style={styles.input}
+secureTextEntry={true}
           placeholder="Enter a Password"
-          value={email}
+          value={confirmPassword}
           onChangeText={text => {
             setConfirmPassword(text);
             setErrors({...errors, confirmPassword: ''});
@@ -196,11 +216,12 @@ const SignUp = ({navigation}: any) => {
 
 export default SignUp;
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-paddingTop:10,
+    paddingTop: 10,
     justifyContent: 'space-between',
     backgroundColor: '#f9f9f9',
   },

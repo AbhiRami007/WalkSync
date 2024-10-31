@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons';
 
 const Dashboard = () => {
   return (
@@ -12,7 +12,6 @@ const Dashboard = () => {
       {/* Activity Cards */}
       <View style={styles.cardsContainer}>
         <View style={styles.cardtwo}>
-          <Ionicons name="walk-outline" size={24} color="#FF7E36" />
           <Text style={styles.cardValue}>1000</Text>
           <Text style={styles.cardLabel}>Steps</Text>
         </View>
@@ -25,7 +24,6 @@ const Dashboard = () => {
           <Text style={styles.cardLabel}>Standing</Text>
         </View>
         <View style={styles.cardtwo}>
-          <Ionicons name="speedometer-outline" size={24} color="#FF7E36" />
           <Text style={styles.cardValue}>0 km/hr</Text>
           <Text style={styles.cardLabel}>Speed</Text>
         </View>
@@ -38,7 +36,6 @@ const Dashboard = () => {
 
       {/* View Activity Log Button */}
       <TouchableOpacity style={styles.viewLogButton}>
-        <Ionicons name="footsteps-outline" size={20} color="#5E83FB" />
         <Text style={[styles.buttonText, {color: '#5E83FB', marginLeft: 8}]}>
           View activity log
         </Text>
@@ -112,13 +109,11 @@ const styles = StyleSheet.create({
   },
   viewLogButton: {
     flexDirection: 'row',
-    backgroundColor: '#eceffb',
+    backgroundColor: '#ffffff',
     borderRadius: 25,
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#5E83FB',
-    borderWidth: 1,
   },
   buttonText: {
     fontSize: 16,

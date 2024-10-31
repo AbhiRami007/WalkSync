@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,9 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import {signUpUser} from '../services/api.service';
+import { signUpUser } from '../services/api.service';
 
-const SignUp = ({navigation}: any) => {
+const SignUp = ({ navigation }: any) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [weight, setWeight] = useState('');
@@ -84,7 +82,34 @@ const SignUp = ({navigation}: any) => {
         Alert.alert('Success', 'Registration successful!');
         navigation.navigate('Success');
       } catch (error: any) {
-        Alert.alert('Error', error.message);
+        console.error('Error signing up user: ', error);
+
+        let errorMessage;
+
+        // Check if error has a code property
+        if (error.code) {
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage = 'This email is already associated with an account.';
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'The email address is not valid.';
+              break;
+            case 'auth/operation-not-allowed':
+              errorMessage = 'Email/password accounts are not enabled.';
+              break;
+            case 'auth/weak-password':
+              errorMessage = 'The password is too weak. Please choose a stronger password.';
+              break;
+            default:
+              errorMessage = 'An unexpected error occurred. Please try again.';
+              break;
+          }
+        } else {
+          errorMessage = error.message || 'An unexpected error occurred. Please try again.';
+        }
+
+        Alert.alert('Error', errorMessage);
       }
     }
   };
@@ -124,9 +149,7 @@ const SignUp = ({navigation}: any) => {
             setErrors({...errors, fullName: ''});
           }}
         />
-        {errors.fullName && (
-          <Text style={styles.errorText}>{errors.fullName}</Text>
-        )}
+        {errors.fullName && <Text style={styles.errorText}>{errors.fullName}</Text>}
 
         <Text style={styles.label}>Email</Text>
         <TextInput
@@ -152,24 +175,20 @@ const SignUp = ({navigation}: any) => {
             setErrors({...errors, password: ''});
           }}
         />
-        {errors.password && (
-          <Text style={styles.errorText}>{errors.password}</Text>
-        )}
+        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
         <Text style={styles.label}>Confirm Password</Text>
         <TextInput
           style={styles.input}
           secureTextEntry={true}
-          placeholder="Enter a Password"
+          placeholder="Confirm Password"
           value={confirmPassword}
           onChangeText={text => {
             setConfirmPassword(text);
             setErrors({...errors, confirmPassword: ''});
           }}
         />
-        {errors.confirmPassword && (
-          <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-        )}
+        {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
         <Text style={styles.label}>Current Weight (kg)</Text>
         <TextInput
@@ -201,17 +220,13 @@ const SignUp = ({navigation}: any) => {
         <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={handleRegister}>
+        <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
           <Text style={styles.buttonTextRegister}>Register Now</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
@@ -283,3 +298,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default SignUp;

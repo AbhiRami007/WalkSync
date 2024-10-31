@@ -8,24 +8,22 @@ const signUpUser = async ({
   password,
   weight,
   height,
-}: SignUpUserParams): Promise<boolean> => {
+}: SignUpUserParams): Promise<void> => {
   try {
-console.log("called")
     const userCredential = await auth().createUserWithEmailAndPassword(email, password);
     const userId = userCredential.user.uid;
 
     // Store user data in Firestore
-    // await firestore().collection('users').doc(userId).set({
-    //   fullName,
-    //   email,
-    //   weight,
-    //   height,
-    //   createdAt: firestore.FieldValue.serverTimestamp(),
-    // });
-    return true;
+    await firestore().collection('users').doc(userId).set({
+      fullName,
+      email,
+      weight,
+      height,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
   } catch (error) {
     console.error("Error signing up user: ", error);
-    return false;
+    throw error; // Rethrow the error to be caught in the component
   }
 };
 

@@ -10,16 +10,17 @@ import {
 const SignUp = ({navigation}: any) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [calorieIntake, setCalorieIntake] = useState('');
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
-
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({
     fullName: '',
     email: '',
-    calorieIntake: '',
     weight: '',
     height: '',
+    password: '',
+    confirmPassword: '',
   });
 
   const validateFields = () => {
@@ -30,6 +31,8 @@ const SignUp = ({navigation}: any) => {
       calorieIntake: '',
       weight: '',
       height: '',
+      password: '',
+      confirmPassword: '',
     };
 
     if (!fullName.trim()) {
@@ -40,10 +43,7 @@ const SignUp = ({navigation}: any) => {
       newErrors.email = 'Email is required';
       valid = false;
     }
-    if (!calorieIntake.trim()) {
-      newErrors.calorieIntake = 'Calorie Intake is required';
-      valid = false;
-    }
+    
     if (!weight.trim()) {
       newErrors.weight = 'Weight is required';
       valid = false;
@@ -52,7 +52,19 @@ const SignUp = ({navigation}: any) => {
       newErrors.height = 'Height is required';
       valid = false;
     }
-
+    if (!password) {
+      newErrors.password = 'Password is required';
+      valid = false;
+    }
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Confirm Password is required';
+      valid = false;
+    }
+    if (password !== confirmPassword) {
+      newErrors.password = 'Password and Confirm Password should match';
+      newErrors.confirmPassword = 'Password and Confirm Password should match';
+      valid = false;
+    }
     setErrors(newErrors);
     return valid;
   };
@@ -67,15 +79,15 @@ const SignUp = ({navigation}: any) => {
   const handleCancel = () => {
     setFullName('');
     setEmail('');
-    setCalorieIntake('');
     setWeight('');
     setHeight('');
     setErrors({
       fullName: '',
       email: '',
-      calorieIntake: '',
       weight: '',
       height: '',
+      password: '',
+      confirmPassword: '',
     });
     navigation.goBack();
   };
@@ -114,7 +126,7 @@ const SignUp = ({navigation}: any) => {
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-<Text style={styles.label}>Password</Text>
+        <Text style={styles.label}>Password</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter a Password"
@@ -124,33 +136,22 @@ const SignUp = ({navigation}: any) => {
             setErrors({...errors, password: ''});
           }}
         />
-        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+        {errors.password && (
+          <Text style={styles.errorText}>{errors.password}</Text>
+        )}
 
-<Text style={styles.label}>Password</Text>
+        <Text style={styles.label}>Confirm Password</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter a Password"
           value={email}
           onChangeText={text => {
-            setPassword(text);
-            setErrors({...errors, password: ''});
+            setConfirmPassword(text);
+            setErrors({...errors, confirmPassword: ''});
           }}
         />
-        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-
-        <Text style={styles.label}>Daily Calorie Intake</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your daily calorie intake"
-          value={calorieIntake}
-          onChangeText={text => {
-            setCalorieIntake(text);
-            setErrors({...errors, calorieIntake: ''});
-          }}
-          keyboardType="numeric"
-        />
-        {errors.calorieIntake && (
-          <Text style={styles.errorText}>{errors.calorieIntake}</Text>
+        {errors.confirmPassword && (
+          <Text style={styles.errorText}>{errors.confirmPassword}</Text>
         )}
 
         <Text style={styles.label}>Current Weight (kg)</Text>
@@ -198,7 +199,8 @@ export default SignUp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 20,
+paddingTop:10,
     justifyContent: 'space-between',
     backgroundColor: '#f9f9f9',
   },
@@ -206,12 +208,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   label: {
     fontSize: 14,
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 10,
-    padding: 12,
+    padding: 10,
     marginVertical: 6,
     fontSize: 15,
     backgroundColor: '#EEEEEE',
@@ -235,7 +237,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 30,
   },
   registerButton: {
     paddingVertical: 12,

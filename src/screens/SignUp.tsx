@@ -74,16 +74,13 @@ const SignUp = ({navigation}: any) => {
   const handleRegister = async () => {
     if (validateFields()) {
       try {
-        // await signUpUser({
-        //   fullName,
-        //   email,
-        //   password,
-        //   weight,
-        //   height,
-        // });
-const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-    const userId = userCredential.user.uid;
-
+        await signUpUser({
+          fullName,
+          email,
+          password,
+          weight,
+          height,
+        });
         Alert.alert('Success', 'Registration successful!');
         navigation.navigate('Success');
       } catch (error: any) {
@@ -149,7 +146,7 @@ const userCredential = await auth().createUserWithEmailAndPassword(email, passwo
           style={styles.input}
           placeholder="Enter a Password"
           value={password}
-secureTextEntry={true}
+          secureTextEntry={true}
           onChangeText={text => {
             setPassword(text);
             setErrors({...errors, password: ''});
@@ -162,7 +159,7 @@ secureTextEntry={true}
         <Text style={styles.label}>Confirm Password</Text>
         <TextInput
           style={styles.input}
-secureTextEntry={true}
+          secureTextEntry={true}
           placeholder="Enter a Password"
           value={confirmPassword}
           onChangeText={text => {
@@ -215,7 +212,6 @@ secureTextEntry={true}
 };
 
 export default SignUp;
-
 
 const styles = StyleSheet.create({
   container: {

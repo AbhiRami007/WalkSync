@@ -24,7 +24,7 @@ export default function OnboardingScreen({navigation}: any) {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('SignUp')} // Replace 'NextScreen' with your next screen's name
+          onPress={() => navigation.navigate('SignUp')}
         >
           <Image
             source={require('../assets/footPrintIcon.png')}
@@ -34,7 +34,7 @@ export default function OnboardingScreen({navigation}: any) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Login')} // Replace 'NextScreen' with your next screen's name
+          onPress={() => navigation.navigate('Login')} 
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>

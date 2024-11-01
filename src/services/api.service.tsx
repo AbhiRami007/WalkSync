@@ -1,7 +1,8 @@
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SignUpUserParams } from '../common/types';
 
+// Sign Up function
 const signUpUser = async ({
   fullName,
   email,
@@ -14,17 +15,34 @@ const signUpUser = async ({
     const userId = userCredential.user.uid;
 
     // Store user data in Firestore
-    await firestore().collection('users').doc(userId).set({
-      fullName,
-      email,
-      weight,
-      height,
-      createdAt: firestore.FieldValue.serverTimestamp(),
-    });
+    // await firestore().collection('users').doc(userId).set({
+    //   fullName,
+    //   email,
+    //   weight,
+    //   height,
+    //   createdAt: firestore.FieldValue.serverTimestamp(),
+    // });
   } catch (error) {
     console.error("Error signing up user: ", error);
-    throw error; // Rethrow the error to be caught in the component
+    throw error; 
   }
 };
 
-export { signUpUser };
+// Login function 
+const loginUser = async (email: string, password: string): Promise<void> => {
+  try {
+    const userCredential = await auth().signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    // Save basic user data in local storage
+    // await AsyncStorage.setItem('user', JSON.stringify({
+    //   uid: user.uid,
+    //   email: user.email,
+    // }));
+  } catch (error) {
+    console.error("Error logging in user: ", error);
+    throw error; 
+  }
+};
+
+export { signUpUser, loginUser };

@@ -1,7 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-const Profile  = ({ navigation }: any) => {
+const Profile = ({ navigation, setIsUserLoggedIn }: any) => {
+  const handleLogout= async () => {
+    auth()
+    .signOut()
+    .then(() => setIsUserLoggedIn(false));
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -15,7 +22,7 @@ const Profile  = ({ navigation }: any) => {
       {/* Profile Picture and Info */}
       <View style={styles.profileInfoContainer}>
         <Image
-          source={{uri: 'https://via.placeholder.com/100'}} // Replace with actual image URL
+          source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual image URL
           style={styles.profileImage}
         />
         <Text style={styles.userName}>Joseph Madagascar</Text>
@@ -51,6 +58,11 @@ const Profile  = ({ navigation }: any) => {
           <Text style={styles.metricLabel}>Current Height</Text>
         </View>
       </View>
+
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -147,6 +159,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6e6e6e',
     marginTop: 5,
+  },
+  logoutButton: {
+    backgroundColor: '#FF3B30',
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderRadius: 50,
+    marginTop: 'auto',
+    marginBottom: 30,
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    color: '#ffffff',
+    fontWeight: 'bold',
   },
 });
 

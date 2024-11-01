@@ -10,14 +10,16 @@ import EditProfile from '../screens/EditProfile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const profileStack = createNativeStackNavigator();
-const profileStackNavigator = () => {
+const ProfileStackNavigator = ({ setIsUserLoggedIn }: any) => {
   return (
-    <profileStack.Navigator initialRouteName='Profile' screenOptions={{headerShown: false}}>
-      <profileStack.Screen name='Profile' component={Profile}/>
-      <profileStack.Screen name='EditProfile' component={EditProfile}/>
+    <profileStack.Navigator initialRouteName='Profile' screenOptions={{ headerShown: false }}>
+      <profileStack.Screen name='Profile'>
+        {props => <Profile {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
+      </profileStack.Screen>
+      <profileStack.Screen name='EditProfile' component={EditProfile} />
     </profileStack.Navigator>
-  )
-}
+  );
+};
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +50,9 @@ const TabStack = ({setIsUserLoggedIn}: any) => {
     >
       <Tab.Screen name="Dashboard" component={Dashboard}  options={{ headerTitle: "", headerShown: false }}/>
       <Tab.Screen name="Compass" component={Compass}  options={{ headerTitle: "", headerShown: false }}/>
-      <Tab.Screen name="Profile" component={profileStackNavigator}  options={{ headerTitle: "", headerShown: false }}/>
+      <Tab.Screen name="Profile" options={{ headerTitle: "", headerShown: false }}>
+        {props => <ProfileStackNavigator {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
+      </Tab.Screen>
       <Tab.Screen name="Logout" options={{ headerTitle: "", headerShown: false }}>
         {props => <Logout {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
       </Tab.Screen>

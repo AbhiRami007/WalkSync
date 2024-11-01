@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "74509056864",
+    "project_id": "walksync-36bad",
+    "storage_bucket": "walksync-36bad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74509056864:android:517b6a18af65d256707c05",
+        "android_client_info": {
+          "package_name": "com.walksync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPmuR7RcZIB4mO5XzmGVpePVMDiTdwbhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

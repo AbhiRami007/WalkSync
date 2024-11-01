@@ -1,10 +1,27 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Dashboard = ({ navigation, setIsUserLoggedIn}: any) => {
-  const handleLogout = async () => {
-    setIsUserLoggedIn(false);
-};
+const Dashboard = ({ navigation }: any) => {
+  const [isTracking, setIsTracking] = useState(false);
+  const [steps, setSteps] = useState(1000);
+
+  useEffect(() => {
+    let stepInterval: any;
+    if (isTracking) {
+      // Start incrementing steps every second
+      stepInterval = setInterval(() => {
+        setSteps((prevSteps) => prevSteps + 1);
+      }, 1000);
+    } else if (!isTracking && stepInterval) {
+      clearInterval(stepInterval); // Clear interval when tracking stops
+    }
+    return () => clearInterval(stepInterval); // Clean up interval on unmount
+  }, [isTracking]);
+
+  const handleStartStopTracking = () => {
+    setIsTracking((prevTracking) => !prevTracking);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -14,7 +31,7 @@ const Dashboard = ({ navigation, setIsUserLoggedIn}: any) => {
       {/* Activity Cards */}
       <View style={styles.cardsContainer}>
         <View style={styles.cardtwo}>
-          <Text style={styles.cardValue}>1000</Text>
+          <Text style={styles.cardValue}>{steps}</Text>
           <Text style={styles.cardLabel}>Steps</Text>
         </View>
         <View style={styles.card}>
@@ -31,14 +48,22 @@ const Dashboard = ({ navigation, setIsUserLoggedIn}: any) => {
         </View>
       </View>
 
-      {/* Start Tracking Button */}
-      <TouchableOpacity style={styles.startTrackingButton}>
-        <Text style={styles.buttonText}>Start Tracking</Text>
+      {/* Start/Stop Tracking Button */}
+      <TouchableOpacity
+        style={isTracking?styles.stopTrackingButton:styles.startTrackingButton}
+        onPress={handleStartStopTracking}
+      >
+        <Text style={isTracking?styles.buttonText:styles.buttonTextWhite}>
+          {isTracking ? 'Stop Tracking' : 'Start Tracking'}
+        </Text>
       </TouchableOpacity>
 
       {/* View Activity Log Button */}
-      <TouchableOpacity style={styles.viewLogButton} onPress={() => navigation.navigate('ActivityLog')}>
-        <Text style={[styles.buttonText, {color: '#5E83FB', marginLeft: 8}]}>
+      <TouchableOpacity
+        style={styles.viewLogButton}
+        onPress={() => navigation.navigate('ActivityLog')}
+      >
+        <Text style={styles.buttonText}>
           View activity log
         </Text>
       </TouchableOpacity>
@@ -75,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
@@ -88,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
@@ -109,6 +134,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
+  stopTrackingButton:{
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginVertical: 20,
+  },
   viewLogButton: {
     flexDirection: 'row',
     backgroundColor: '#ffffff',
@@ -117,10 +149,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText: {
+  buttonTextWhite: {
     fontSize: 16,
     color: '#FFF',
   },
+  buttonText:{
+    fontSize: 16,
+    color: '#5E83FB', 
+    marginLeft: 8 
+  }
 });
 
 export default Dashboard;

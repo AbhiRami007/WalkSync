@@ -8,6 +8,7 @@ import Profile from '../screens/Profile';
 import Logout from '../screens/Logout';
 import EditProfile from '../screens/EditProfile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Settings from '../screens/Settings';
 
 const profileStack = createNativeStackNavigator();
 const ProfileStackNavigator = ({ setIsUserLoggedIn }: any) => {
@@ -53,9 +54,7 @@ const TabStack = ({setIsUserLoggedIn}: any) => {
       <Tab.Screen name="Profile" options={{ headerTitle: "", headerShown: false }}>
         {props => <ProfileStackNavigator {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
       </Tab.Screen>
-      <Tab.Screen name="Logout" options={{ headerTitle: "", headerShown: false }}>
-        {props => <Logout {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
-      </Tab.Screen>
+      <Tab.Screen name="Settings" component={Settings}  options={{ headerTitle: "", headerShown: false }}/>
     </Tab.Navigator>
   );
 };

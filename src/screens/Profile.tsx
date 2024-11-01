@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
-const Profile = () => {
+const Profile  = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Profile</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <Text style={styles.editProfile}>Edit profile</Text>
         </TouchableOpacity>
       </View>

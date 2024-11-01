@@ -44,14 +44,6 @@ const SignUp = ({ navigation }: any) => {
       newErrors.email = 'Email is required';
       valid = false;
     }
-    if (!weight.trim()) {
-      newErrors.weight = 'Weight is required';
-      valid = false;
-    }
-    if (!height.trim()) {
-      newErrors.height = 'Height is required';
-      valid = false;
-    }
     if (!password) {
       newErrors.password = 'Password is required';
       valid = false;
@@ -161,6 +153,7 @@ const SignUp = ({ navigation }: any) => {
             setErrors({...errors, email: ''});
           }}
           keyboardType="email-address"
+          autoCapitalize='none'
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 

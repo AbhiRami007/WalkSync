@@ -39,8 +39,8 @@ const TabStack = ({setIsUserLoggedIn}: any) => {
             iconName = focused ? 'compass' : 'compass-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
-          }else if (route.name === 'Logout') {
-            iconName = focused ? 'person' : 'person-outline';
+          }else if (route.name === 'Settings') {
+            iconName = focused ? 'settings' : 'settings-outline';
           }
 
           return <Ionicons name={iconName!} size={size} color={color} />;

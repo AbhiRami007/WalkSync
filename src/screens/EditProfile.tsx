@@ -1,33 +1,64 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { UserContext } from '../UserContext';
+import { User } from '../common/types';
 
 const EditProfile = ({ navigation }: any) => {
+  const [state, setState] = useContext(UserContext);
+  const [fullName, setFullName] = useState(state.fullName);
+  const [weight, setWeight] = useState(state.weight);
+  const [height, setHeight] = useState(state.height);
+  const [dailyCaloriesIntake, setDailyCaloriesIntake] = useState(state.dailyCaloriesIntake);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Edit Profile</Text>
 
       {/* Full Name Input */}
       <Text style={styles.label}>Full Name</Text>
-      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7" />
+      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7"
+      value={fullName} onChangeText={(text)=> {
+        setFullName(text);
+      }} />
 
       {/* Daily Calorie Intake Input */}
       <Text style={styles.label}>Daily Calorie Intake</Text>
-      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7" />
+      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7"
+            value={dailyCaloriesIntake} onChangeText={(text)=> {
+              setDailyCaloriesIntake(text);
+            }}  />
 
       {/* Current Weight Input */}
       <Text style={styles.label}>Current Weight</Text>
-      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7" />
+      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7" 
+            value={weight} onChangeText={(text)=> {
+              setWeight(text);
+            }} />
 
       {/* Current Height Input */}
       <Text style={styles.label}>Current Height</Text>
-      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7" />
+      <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7"
+            value={height} onChangeText={(text)=> {
+              setHeight(text);
+            }}  />
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
           <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity style={styles.saveButton} onPress={() => {
+          const updatedUser: User = {
+            fullName: fullName,
+            email: state.email,
+            weight: weight,
+            height: height,
+            dailyCaloriesIntake: dailyCaloriesIntake,
+            isLoggedIn: true
+          }
+          setState?.(updatedUser)
+          navigation.goBack()
+        }}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       </View>

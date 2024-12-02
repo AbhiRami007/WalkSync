@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { UserContext } from '../UserContext';
+import { emptyUser } from '../common/types';
 
-const Profile = ({ navigation, setIsUserLoggedIn }: any) => {
+const Profile = ({ navigation }: any) => {
+  const [state, setState] = useContext(UserContext)
   const handleLogout= async () => {
+    setState?.(emptyUser)
     auth()
     .signOut()
-    .then(() => setIsUserLoggedIn(false));
+    .then(() => {
+      console.log("sign out successful")
+    });
   };
 
   return (
@@ -25,8 +31,8 @@ const Profile = ({ navigation, setIsUserLoggedIn }: any) => {
           source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual image URL
           style={styles.profileImage}
         />
-        <Text style={styles.userName}>Joseph Madagascar</Text>
-        <Text style={styles.userEmail}>mjoesph@gmail.com</Text>
+        <Text style={styles.userName}>{state.fullName}</Text>
+        <Text style={styles.userEmail}>{state.email}</Text>
       </View>
 
       {/* Goal Weight Card */}
@@ -41,19 +47,19 @@ const Profile = ({ navigation, setIsUserLoggedIn }: any) => {
       <View style={styles.metricsContainer}>
         <View style={styles.metricCardTwo}>
           <Text style={styles.metricValue}>
-            320 <Text style={styles.unit}>cal/day</Text>
+            {state.dailyCaloriesIntake} <Text style={styles.unit}>cal/day</Text>
           </Text>
           <Text style={styles.metricLabel}>Calories Per Day</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            82 <Text style={styles.unit}>kg</Text>
+            {state.weight} <Text style={styles.unit}>kg</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Weight</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            172 <Text style={styles.unit}>cm</Text>
+            {state.height} <Text style={styles.unit}>cm</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Height</Text>
         </View>

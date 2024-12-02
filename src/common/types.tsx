@@ -1,8 +1,14 @@
 export interface User {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-  avatarUrl?: string;
+  // id: string;
+  // firstName?: string;
+  // lastName?: string;
+  // avatarUrl?: string;
+  fullName: string;
+  email: string;
+  weight: string;
+  height: string;
+  dailyCaloriesIntake: string;
+  isLoggedIn: Boolean;
 }
 
 export interface AppData {
@@ -15,4 +21,13 @@ export interface SignUpUserParams {
   password: string;
   weight: string;
   height: string;
+}
+
+export const emptyUser: User = {
+  fullName: "",
+  email: "",
+  weight: "",
+  height: "",
+  dailyCaloriesIntake: "",
+  isLoggedIn: false,
 }

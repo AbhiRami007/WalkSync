@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,13 @@ import {
   Alert,
 } from 'react-native';
 import { signUpUser } from '../services/api.service';
+import { User } from '../common/types';
+import { UserContext } from '../UserContext';
 
 const SignUp = ({ navigation }: any) => {
+
+    const [state, setState] = useContext(UserContext);
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [weight, setWeight] = useState('');
@@ -44,6 +49,14 @@ const SignUp = ({ navigation }: any) => {
       newErrors.email = 'Email is required';
       valid = false;
     }
+    // if (!weight.trim()) {
+    //   newErrors.weight = 'Weight is required';
+    //   valid = false;
+    // }
+    // if (!height.trim()) {
+    //   newErrors.height = 'Height is required';
+    //   valid = false;
+    // }
     if (!password) {
       newErrors.password = 'Password is required';
       valid = false;
@@ -64,6 +77,18 @@ const SignUp = ({ navigation }: any) => {
   const handleRegister = async () => {
     if (validateFields()) {
       try {
+
+        // update context
+        const registeredUser: User = {
+            fullName: fullName,
+            email: email,
+            weight: weight,
+            height: height,
+            dailyCaloriesIntake: "",
+            isLoggedIn: false
+        };
+        setState?.(registeredUser);
+
         await signUpUser({
           fullName,
           email,

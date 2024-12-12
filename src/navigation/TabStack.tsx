@@ -1,32 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Dashboard from '../screens/Dashboard';
 import ActivityLog from '../screens/ActivityLog';
 import Compass from '../screens/Compass';
 import Profile from '../screens/Profile';
-import Logout from '../screens/Logout';
+//import Logout from '../screens/Logout';
 import EditProfile from '../screens/EditProfile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Settings from '../screens/Settings';
 
 const profileStack = createNativeStackNavigator();
-const ProfileStackNavigator = ({ setIsUserLoggedIn }: any) => {
+const ProfileStackNavigator = () => {
   return (
-    <profileStack.Navigator initialRouteName='Profile' screenOptions={{ headerShown: false }}>
-      <profileStack.Screen name='Profile'>
-        {props => <Profile {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
-      </profileStack.Screen>
+    <profileStack.Navigator initialRouteName='UserProfile' screenOptions={{ headerShown: false }}>
+      <profileStack.Screen name='UserProfile' component={Profile}/>
       <profileStack.Screen name='EditProfile' component={EditProfile} />
     </profileStack.Navigator>
   );
 };
 
 const Tab = createBottomTabNavigator();
-
-const TabStack = ({setIsUserLoggedIn}: any) => {
+const TabStack = () => {
   return (
-    
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={({ route }) => ({
@@ -51,9 +47,7 @@ const TabStack = ({setIsUserLoggedIn}: any) => {
     >
       <Tab.Screen name="Dashboard" component={Dashboard}  options={{ headerTitle: "", headerShown: false }}/>
       <Tab.Screen name="Compass" component={Compass}  options={{ headerTitle: "", headerShown: false }}/>
-      <Tab.Screen name="Profile" options={{ headerTitle: "", headerShown: false }}>
-        {props => <ProfileStackNavigator {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
-      </Tab.Screen>
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} options={{ headerTitle: "", headerShown: false }}/>
       <Tab.Screen name="Settings" component={Settings}  options={{ headerTitle: "", headerShown: false }}/>
     </Tab.Navigator>
   );

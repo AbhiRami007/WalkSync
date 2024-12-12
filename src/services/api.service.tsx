@@ -13,7 +13,6 @@ const signUpUser = async ({
   try {
     const userCredential = await auth().createUserWithEmailAndPassword(email, password);
     const userId = userCredential.user.uid;
-
     // Store user data in Firestore
     // await firestore().collection('users').doc(userId).set({
     //   fullName,

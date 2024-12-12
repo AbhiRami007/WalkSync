@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { loginUser } from '../services/api.service';
+import { UserContext } from '../UserContext';
+import { User } from '../common/types';
 
-const Login = ({ setIsUserLoggedIn, navigation }: any) => {
+const Login = ({ navigation }: any) => {
+
+  const [state, setState] = useContext(UserContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({
@@ -33,8 +38,22 @@ const Login = ({ setIsUserLoggedIn, navigation }: any) => {
   const handleLogin = async () => {
     if (validateFields()) {
       try {
-        await loginUser(email, password); 
-        setIsUserLoggedIn(true);
+        // update context
+        const loggedInUser: User = {
+          fullName: state.fullName,
+          email: email,
+          weight: state.weight,
+          height: state.height,
+          dailyCaloriesIntake: state.dailyCaloriesIntake,
+          isLoggedIn: true
+        };
+        setState?.(loggedInUser);
+        console.log("is logged in: " + state.isLoggedIn)
+        await loginUser(email, password).
+          then(() => {
+            console.log("user should be logged in")
+          })
+
       } catch (error) {
         Alert.alert('Login Failed', 'Please check your credentials.');
       }

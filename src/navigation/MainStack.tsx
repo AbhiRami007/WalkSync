@@ -6,12 +6,10 @@ import ActivityLog from '../screens/ActivityLog';
 
 const MainStack = createNativeStackNavigator();
 
-const MainStackNavigator = ({ setIsUserLoggedIn }: any) => {
+const MainStackNavigator = () => {
   return (
     <MainStack.Navigator initialRouteName="Home">
-      <MainStack.Screen name="Home">
-        {props => <TabStack {...props} setIsUserLoggedIn={setIsUserLoggedIn} />}
-      </MainStack.Screen>
+      <MainStack.Screen name="Home" component={TabStack}/>
       <MainStack.Screen name="ActivityLog" component={ActivityLog} />
     </MainStack.Navigator>
   );

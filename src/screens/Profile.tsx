@@ -11,47 +11,47 @@ const Profile = ({ navigation }: any) => {
   const [userData, setUserData] = useState<User | null>(null); // State to hold fetched user data
 
   // Fetch user data when the screen comes into focus
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchUserData = async () => {
-        try {
-          const currentUser = auth().currentUser;
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchUserData = async () => {
+  //       try {
+  //         const currentUser = auth().currentUser;
 
-          if (!currentUser) {
-            console.log('No user is signed in.');
-            return;
-          }
+  //         if (!currentUser) {
+  //           console.log('No user is signed in.');
+  //           return;
+  //         }
 
-          const userId = currentUser.uid;
+  //         const userId = currentUser.uid;
 
-          // Fetch the document from Firestore using the UID
-          const documentSnapshot = await firestore().collection('users').doc(userId).get();
+  //         // Fetch the document from Firestore using the UID
+  //         const documentSnapshot = await firestore().collection('users').doc(userId).get();
 
-          if (documentSnapshot.exists) {
-            const fetchedData = documentSnapshot.data();
+  //         if (documentSnapshot.exists) {
+  //           const fetchedData = documentSnapshot.data();
 
-            // Map Firestore data to the `User` interface
-            const mappedUserData: User = {
-              fullName: fetchedData?.fullName || 'Unknown User',
-              email: currentUser.email || 'No Email', // Fetched from Firebase Authentication
-              weight: fetchedData?.weight?.toString() || '0',
-              height: fetchedData?.height?.toString() || '0',
-              dailyCaloriesIntake: fetchedData?.dailyCaloriesIntake?.toString() || '0',
-              isLoggedIn: true, // Derived from current state
-            };
+  //           // Map Firestore data to the `User` interface
+  //           const mappedUserData: User = {
+  //             fullName: fetchedData?.fullName || 'Unknown User',
+  //             email: currentUser.email || 'No Email', // Fetched from Firebase Authentication
+  //             weight: fetchedData?.weight?.toString() || '0',
+  //             height: fetchedData?.height?.toString() || '0',
+  //             dailyCaloriesIntake: fetchedData?.dailyCaloriesIntake?.toString() || '0',
+  //             isLoggedIn: true, // Derived from current state
+  //           };
 
-            setUserData(mappedUserData); // Update the user data state
-          } else {
-            console.log('No such document for the current user!');
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
+  //           setUserData(mappedUserData); // Update the user data state
+  //         } else {
+  //           console.log('No such document for the current user!');
+  //         }
+  //       } catch (error) {
+  //         console.error('Error fetching user data:', error);
+  //       }
+  //     };
 
-      fetchUserData();
-    }, []) // This ensures the effect runs only once when the screen is focused
-  );
+  //     fetchUserData();
+  //   }, []) // This ensures the effect runs only once when the screen is focused
+  // );
 
   const handleLogout = async () => {
     setState?.(emptyUser);
@@ -78,8 +78,8 @@ const Profile = ({ navigation }: any) => {
           source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual image URL
           style={styles.profileImage}
         />
-        <Text style={styles.userName}>{userData?.fullName || 'Loading...'}</Text>
-        <Text style={styles.userEmail}>{userData?.email || 'Loading...'}</Text>
+        <Text style={styles.userName}>{state?.fullName || 'Loading...'}</Text>
+        <Text style={styles.userEmail}>{state?.email || 'Loading...'}</Text>
       </View>
 
       {/* Goal Weight Card */}
@@ -94,19 +94,19 @@ const Profile = ({ navigation }: any) => {
       <View style={styles.metricsContainer}>
         <View style={styles.metricCardTwo}>
           <Text style={styles.metricValue}>
-            {userData?.dailyCaloriesIntake || 0} <Text style={styles.unit}>cal/day</Text>
+            {state?.dailyCaloriesIntake || 0} <Text style={styles.unit}>cal/day</Text>
           </Text>
           <Text style={styles.metricLabel}>Calories Per Day</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            {userData?.weight || 0} <Text style={styles.unit}>kg</Text>
+            {state?.weight || 0} <Text style={styles.unit}>kg</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Weight</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            {userData?.height || 0} <Text style={styles.unit}>cm</Text>
+            {state?.height || 0} <Text style={styles.unit}>cm</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Height</Text>
         </View>

@@ -63,8 +63,12 @@ const EditProfile = ({ navigation }: any) => {
 
   // useEffect to fetch user data when the component mounts
   useEffect(() => {
-    fetchUserData();
-  }, []); // This effect runs once on component mount
+  //   fetchUserData();
+  setFullName(state.fullName);
+  setWeight(state.weight);
+  setHeight(state.height);
+  setDailyCaloriesIntake(state.dailyCaloriesIntake);
+ }, []); // This effect runs once on component mount
 
   const validateFields = () => {
     let isValid = true;

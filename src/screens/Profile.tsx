@@ -2,15 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { UserContext } from '../UserContext';
-import { emptyUser } from '../common/types';
+import { emptyUser, User } from '../common/types';
 import firestore from '@react-native-firebase/firestore';
-
-interface User {
-  calorieIntake: number;
-  height: number;
-  name: string;
-  weight: number;
-}
 
 const Profile = ({ navigation }: any) => {
   const [state, setState] = useContext(UserContext);
@@ -33,8 +26,19 @@ const Profile = ({ navigation }: any) => {
         const documentSnapshot = await firestore().collection('users').doc(userId).get();
 
         if (documentSnapshot.exists) {
-          const fetchedData = documentSnapshot.data() as User;
-          setUserData(fetchedData); // Update the user data state
+          const fetchedData = documentSnapshot.data();
+
+          // Map Firestore data to the `User` interface
+          const mappedUserData: User = {
+            fullName: fetchedData?.fullName || 'Unknown User',
+            email: currentUser.email || 'No Email', // Fetched from Firebase Authentication
+            weight: fetchedData?.weight?.toString() || '0',
+            height: fetchedData?.height?.toString() || '0',
+            dailyCaloriesIntake: fetchedData?.dailyCaloriesIntake?.toString() || '0',
+            isLoggedIn: true, // Derived from current state
+          };
+
+          setUserData(mappedUserData); // Update the user data state
         } else {
           console.log('No such document for the current user!');
         }
@@ -71,8 +75,8 @@ const Profile = ({ navigation }: any) => {
           source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual image URL
           style={styles.profileImage}
         />
-        <Text style={styles.userName}>{userData?.name || 'Loading...'}</Text>
-        <Text style={styles.userEmail}>{state.email}</Text>
+        <Text style={styles.userName}>{userData?.fullName || 'Loading...'}</Text>
+        <Text style={styles.userEmail}>{userData?.email || 'Loading...'}</Text>
       </View>
 
       {/* Goal Weight Card */}
@@ -87,7 +91,7 @@ const Profile = ({ navigation }: any) => {
       <View style={styles.metricsContainer}>
         <View style={styles.metricCardTwo}>
           <Text style={styles.metricValue}>
-            {userData?.calorieIntake || 0} <Text style={styles.unit}>cal/day</Text>
+            {userData?.dailyCaloriesIntake || 0} <Text style={styles.unit}>cal/day</Text>
           </Text>
           <Text style={styles.metricLabel}>Calories Per Day</Text>
         </View>

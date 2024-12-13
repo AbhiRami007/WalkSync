@@ -29,14 +29,14 @@ const EditProfile = ({ navigation }: any) => {
             }}  />
 
       {/* Current Weight Input */}
-      <Text style={styles.label}>Current Weight</Text>
+      <Text style={styles.label}>Current Weight (kg)</Text>
       <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7" 
             value={weight} onChangeText={(text)=> {
               setWeight(text);
             }} />
 
       {/* Current Height Input */}
-      <Text style={styles.label}>Current Height</Text>
+      <Text style={styles.label}>Current Height (cm)</Text>
       <TextInput style={styles.input} placeholder="Enter" placeholderTextColor="#c7c7c7"
             value={height} onChangeText={(text)=> {
               setHeight(text);

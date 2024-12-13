@@ -1,8 +1,4 @@
 export interface User {
-  // id: string;
-  // firstName?: string;
-  // lastName?: string;
-  // avatarUrl?: string;
   fullName: string;
   email: string;
   weight: string;

@@ -1,18 +1,65 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { UserContext } from '../UserContext';
-import { emptyUser } from '../common/types';
+import { emptyUser, User } from '../common/types';
+import firestore from '@react-native-firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Profile = ({ navigation }: any) => {
-  const [state, setState] = useContext(UserContext)
-  const handleLogout= async () => {
-    setState?.(emptyUser)
+  const [state, setState] = useContext(UserContext);
+  const [userData, setUserData] = useState<User | null>(null); // State to hold fetched user data
+
+  // Fetch user data when the screen comes into focus
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchUserData = async () => {
+  //       try {
+  //         const currentUser = auth().currentUser;
+
+  //         if (!currentUser) {
+  //           console.log('No user is signed in.');
+  //           return;
+  //         }
+
+  //         const userId = currentUser.uid;
+
+  //         // Fetch the document from Firestore using the UID
+  //         const documentSnapshot = await firestore().collection('users').doc(userId).get();
+
+  //         if (documentSnapshot.exists) {
+  //           const fetchedData = documentSnapshot.data();
+
+  //           // Map Firestore data to the `User` interface
+  //           const mappedUserData: User = {
+  //             fullName: fetchedData?.fullName || 'Unknown User',
+  //             email: currentUser.email || 'No Email', // Fetched from Firebase Authentication
+  //             weight: fetchedData?.weight?.toString() || '0',
+  //             height: fetchedData?.height?.toString() || '0',
+  //             dailyCaloriesIntake: fetchedData?.dailyCaloriesIntake?.toString() || '0',
+  //             isLoggedIn: true, // Derived from current state
+  //           };
+
+  //           setUserData(mappedUserData); // Update the user data state
+  //         } else {
+  //           console.log('No such document for the current user!');
+  //         }
+  //       } catch (error) {
+  //         console.error('Error fetching user data:', error);
+  //       }
+  //     };
+
+  //     fetchUserData();
+  //   }, []) // This ensures the effect runs only once when the screen is focused
+  // );
+
+  const handleLogout = async () => {
+    setState?.(emptyUser);
     auth()
-    .signOut()
-    .then(() => {
-      console.log("sign out successful")
-    });
+      .signOut()
+      .then(() => {
+        console.log('Sign out successful');
+      });
   };
 
   return (
@@ -31,8 +78,8 @@ const Profile = ({ navigation }: any) => {
           source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual image URL
           style={styles.profileImage}
         />
-        <Text style={styles.userName}>{state.fullName}</Text>
-        <Text style={styles.userEmail}>{state.email}</Text>
+        <Text style={styles.userName}>{state?.fullName || 'Loading...'}</Text>
+        <Text style={styles.userEmail}>{state?.email || 'Loading...'}</Text>
       </View>
 
       {/* Goal Weight Card */}
@@ -47,19 +94,19 @@ const Profile = ({ navigation }: any) => {
       <View style={styles.metricsContainer}>
         <View style={styles.metricCardTwo}>
           <Text style={styles.metricValue}>
-            {state.dailyCaloriesIntake} <Text style={styles.unit}>cal/day</Text>
+            {state?.dailyCaloriesIntake || 0} <Text style={styles.unit}>cal/day</Text>
           </Text>
           <Text style={styles.metricLabel}>Calories Per Day</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            {state.weight} <Text style={styles.unit}>kg</Text>
+            {state?.weight || 0} <Text style={styles.unit}>kg</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Weight</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            {state.height} <Text style={styles.unit}>cm</Text>
+            {state?.height || 0} <Text style={styles.unit}>cm</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Height</Text>
         </View>

@@ -7,13 +7,13 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { signUpUser } from '../services/api.service';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import { User } from '../common/types';
 import { UserContext } from '../UserContext';
 
 const SignUp = ({ navigation }: any) => {
-
-    const [state, setState] = useContext(UserContext);
+  const [state, setState] = useContext(UserContext);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -49,14 +49,6 @@ const SignUp = ({ navigation }: any) => {
       newErrors.email = 'Email is required';
       valid = false;
     }
-    // if (!weight.trim()) {
-    //   newErrors.weight = 'Weight is required';
-    //   valid = false;
-    // }
-    // if (!height.trim()) {
-    //   newErrors.height = 'Height is required';
-    //   valid = false;
-    // }
     if (!password) {
       newErrors.password = 'Password is required';
       valid = false;
@@ -77,25 +69,25 @@ const SignUp = ({ navigation }: any) => {
   const handleRegister = async () => {
     if (validateFields()) {
       try {
+        // Create a new user in Firebase Authentication
+        const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+        const userId = userCredential.user.uid;
 
-        // update context
-        const registeredUser: User = {
-            fullName: fullName,
-            email: email,
-            weight: weight,
-            height: height,
-            dailyCaloriesIntake: "",
-            isLoggedIn: false
-        };
-        setState?.(registeredUser);
-
-        await signUpUser({
+        // Save additional user data in Firestore
+        const userDoc: User = {
           fullName,
           email,
-          password,
           weight,
           height,
-        });
+          dailyCaloriesIntake: '',
+          isLoggedIn: false,
+        };
+
+        await firestore().collection('users').doc(userId).set(userDoc);
+
+        // Update context
+        setState?.(userDoc);
+
         Alert.alert('Success', 'Registration successful!');
         navigation.navigate('Success');
       } catch (error: any) {
@@ -103,7 +95,6 @@ const SignUp = ({ navigation }: any) => {
 
         let errorMessage;
 
-        // Check if error has a code property
         if (error.code) {
           switch (error.code) {
             case 'auth/email-already-in-use':
@@ -163,7 +154,7 @@ const SignUp = ({ navigation }: any) => {
           value={fullName}
           onChangeText={text => {
             setFullName(text);
-            setErrors({...errors, fullName: ''});
+            setErrors({ ...errors, fullName: '' });
           }}
         />
         {errors.fullName && <Text style={styles.errorText}>{errors.fullName}</Text>}
@@ -175,10 +166,10 @@ const SignUp = ({ navigation }: any) => {
           value={email}
           onChangeText={text => {
             setEmail(text);
-            setErrors({...errors, email: ''});
+            setErrors({ ...errors, email: '' });
           }}
           keyboardType="email-address"
-          autoCapitalize='none'
+          autoCapitalize="none"
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
@@ -190,7 +181,7 @@ const SignUp = ({ navigation }: any) => {
           secureTextEntry={true}
           onChangeText={text => {
             setPassword(text);
-            setErrors({...errors, password: ''});
+            setErrors({ ...errors, password: '' });
           }}
         />
         {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
@@ -203,7 +194,7 @@ const SignUp = ({ navigation }: any) => {
           value={confirmPassword}
           onChangeText={text => {
             setConfirmPassword(text);
-            setErrors({...errors, confirmPassword: ''});
+            setErrors({ ...errors, confirmPassword: '' });
           }}
         />
         {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
@@ -215,7 +206,7 @@ const SignUp = ({ navigation }: any) => {
           value={weight}
           onChangeText={text => {
             setWeight(text);
-            setErrors({...errors, weight: ''});
+            setErrors({ ...errors, weight: '' });
           }}
           keyboardType="numeric"
         />
@@ -228,7 +219,7 @@ const SignUp = ({ navigation }: any) => {
           value={height}
           onChangeText={text => {
             setHeight(text);
-            setErrors({...errors, height: ''});
+            setErrors({ ...errors, height: '' });
           }}
           keyboardType="numeric"
         />

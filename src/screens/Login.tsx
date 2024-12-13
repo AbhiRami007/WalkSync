@@ -38,22 +38,12 @@ const Login = ({ navigation }: any) => {
   const handleLogin = async () => {
     if (validateFields()) {
       try {
-        // update context
-        const loggedInUser: User = {
-          fullName: state.fullName,
-          email: email,
-          weight: state.weight,
-          height: state.height,
-          dailyCaloriesIntake: state.dailyCaloriesIntake,
-          isLoggedIn: true
-        };
-        setState?.(loggedInUser);
-        console.log("is logged in: " + state.isLoggedIn)
         await loginUser(email, password).
-          then(() => {
-            console.log("user should be logged in")
+          then((user) => {
+            console.log("user should be logged in: " + user.email);
+            setState?.(user);
+            console.log("logged in user: " + state.email);
           })
-
       } catch (error) {
         Alert.alert('Login Failed', 'Please check your credentials.');
       }

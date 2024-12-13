@@ -4,51 +4,54 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { UserContext } from '../UserContext';
 import { emptyUser, User } from '../common/types';
 import firestore from '@react-native-firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Profile = ({ navigation }: any) => {
   const [state, setState] = useContext(UserContext);
   const [userData, setUserData] = useState<User | null>(null); // State to hold fetched user data
 
-  // Fetch user data on component mount
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const currentUser = auth().currentUser;
+  // Fetch user data when the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUserData = async () => {
+        try {
+          const currentUser = auth().currentUser;
 
-        if (!currentUser) {
-          console.log('No user is signed in.');
-          return;
+          if (!currentUser) {
+            console.log('No user is signed in.');
+            return;
+          }
+
+          const userId = currentUser.uid;
+
+          // Fetch the document from Firestore using the UID
+          const documentSnapshot = await firestore().collection('users').doc(userId).get();
+
+          if (documentSnapshot.exists) {
+            const fetchedData = documentSnapshot.data();
+
+            // Map Firestore data to the `User` interface
+            const mappedUserData: User = {
+              fullName: fetchedData?.fullName || 'Unknown User',
+              email: currentUser.email || 'No Email', // Fetched from Firebase Authentication
+              weight: fetchedData?.weight?.toString() || '0',
+              height: fetchedData?.height?.toString() || '0',
+              dailyCaloriesIntake: fetchedData?.dailyCaloriesIntake?.toString() || '0',
+              isLoggedIn: true, // Derived from current state
+            };
+
+            setUserData(mappedUserData); // Update the user data state
+          } else {
+            console.log('No such document for the current user!');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
         }
+      };
 
-        const userId = currentUser.uid;
-
-        // Fetch the document from Firestore using the UID
-        const documentSnapshot = await firestore().collection('users').doc(userId).get();
-
-        if (documentSnapshot.exists) {
-          const fetchedData = documentSnapshot.data();
-
-          // Map Firestore data to the `User` interface
-          const mappedUserData: User = {
-            fullName: fetchedData?.fullName || 'Unknown User',
-            email: currentUser.email || 'No Email', // Fetched from Firebase Authentication
-            weight: fetchedData?.weight?.toString() || '0',
-            height: fetchedData?.height?.toString() || '0',
-            dailyCaloriesIntake: fetchedData?.dailyCaloriesIntake?.toString() || '0',
-            isLoggedIn: true, // Derived from current state
-          };
-
-          setUserData(mappedUserData); // Update the user data state
-        } else {
-          console.log('No such document for the current user!');
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+      fetchUserData();
+    }, []) // This ensures the effect runs only once when the screen is focused
+  );
 
   const handleLogout = async () => {
     setState?.(emptyUser);

@@ -3,23 +3,37 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const Dashboard = ({ navigation }: any) => {
   const [isTracking, setIsTracking] = useState(false);
-  const [steps, setSteps] = useState(1000);
+  const [isStanding, setIsStanding] = useState(true);
+  const [steps, setSteps] = useState(0);
+  const [stand, setStanding] = useState(0);
 
   useEffect(() => {
     let stepInterval: any;
+    let standInterval: any;
+  
     if (isTracking) {
-      // Start incrementing steps every second
+      // Start steps counting
       stepInterval = setInterval(() => {
         setSteps((prevSteps) => prevSteps + 1);
       }, 1000);
-    } else if (!isTracking && stepInterval) {
-      clearInterval(stepInterval); // Clear interval when tracking stops
+      clearInterval(standInterval); // Stop standing
+    } else {
+      // Start standing counting
+      standInterval = setInterval(() => {
+        setStanding((prev) => prev + 1);
+      }, 1000);
+      clearInterval(stepInterval); // Stop steps
     }
-    return () => clearInterval(stepInterval); // Clean up interval on unmount
+  
+    return () => {
+      clearInterval(stepInterval);
+      clearInterval(standInterval);
+    };
   }, [isTracking]);
-
+  
   const handleStartStopTracking = () => {
     setIsTracking((prevTracking) => !prevTracking);
+    setIsStanding((prevStanding) => prevStanding); 
   };
 
   return (
@@ -35,11 +49,11 @@ const Dashboard = ({ navigation }: any) => {
           <Text style={styles.cardLabel}>Steps</Text>
         </View>
         <View style={styles.card}>
-          <Text style={styles.cardValue}>5 km</Text>
+          <Text style={styles.cardValue}>0 km</Text>
           <Text style={styles.cardLabel}>Walking</Text>
         </View>
         <View style={styles.card}>
-          <Text style={styles.cardValue}>8 Hr</Text>
+        <Text style={styles.cardValue}>{(stand / 3600).toFixed(2)} hr</Text>
           <Text style={styles.cardLabel}>Standing</Text>
         </View>
         <View style={styles.cardtwo}>

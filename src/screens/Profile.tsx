@@ -3,16 +3,59 @@ import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { UserContext } from '../UserContext';
 import { emptyUser } from '../common/types';
+import firestore from '@react-native-firebase/firestore';
+
+const usersCollection = firestore().collection('users');
+
+interface User {
+  calorieIntake: number;
+  height: number;
+  name: string;
+  weight: number;
+}
 
 const Profile = ({ navigation }: any) => {
   const [state, setState] = useContext(UserContext)
-  const handleLogout= async () => {
+  const handleLogout = async () => {
     setState?.(emptyUser)
     auth()
-    .signOut()
-    .then(() => {
-      console.log("sign out successful")
-    });
+      .signOut()
+      .then(() => {
+        console.log("sign out successful")
+      });
+  };
+
+
+  const fetchUserData = async () => {
+    try {
+      // Get the currently signed-in user
+      const currentUser = auth().currentUser;
+  
+      if (!currentUser) {
+        console.log('No user is signed in.');
+        return;
+      }
+  
+      const userId = currentUser.uid;
+  
+      // Fetch the document from Firestore using the UID as the document ID
+      const documentSnapshot = await firestore().collection('users').doc(userId).get();
+  
+      if (documentSnapshot.exists) {
+        // Use the User type for better type safety
+        const userData = documentSnapshot.data() as User;
+  
+        console.log('User Data:', userData);
+        console.log('Name:', userData.name);
+        console.log('Height:', userData.height);
+        console.log('Weight:', userData.weight);
+        console.log('Calorie Intake:', userData.calorieIntake);
+      } else {
+        console.log('No such document for the current user!');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
 
   return (
@@ -20,7 +63,10 @@ const Profile = ({ navigation }: any) => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Profile</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+        <TouchableOpacity onPress={() => {
+          fetchUserData()
+          //navigation.navigate('EditProfile')
+        }}>
           <Text style={styles.editProfile}>Edit profile</Text>
         </TouchableOpacity>
       </View>

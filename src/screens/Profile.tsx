@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { UserContext } from '../UserContext';
 import { emptyUser } from '../common/types';
 import firestore from '@react-native-firebase/firestore';
-
-const usersCollection = firestore().collection('users');
 
 interface User {
   calorieIntake: number;
@@ -15,47 +13,46 @@ interface User {
 }
 
 const Profile = ({ navigation }: any) => {
-  const [state, setState] = useContext(UserContext)
+  const [state, setState] = useContext(UserContext);
+  const [userData, setUserData] = useState<User | null>(null); // State to hold fetched user data
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const currentUser = auth().currentUser;
+
+        if (!currentUser) {
+          console.log('No user is signed in.');
+          return;
+        }
+
+        const userId = currentUser.uid;
+
+        // Fetch the document from Firestore using the UID
+        const documentSnapshot = await firestore().collection('users').doc(userId).get();
+
+        if (documentSnapshot.exists) {
+          const fetchedData = documentSnapshot.data() as User;
+          setUserData(fetchedData); // Update the user data state
+        } else {
+          console.log('No such document for the current user!');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
+
   const handleLogout = async () => {
-    setState?.(emptyUser)
+    setState?.(emptyUser);
     auth()
       .signOut()
       .then(() => {
-        console.log("sign out successful")
+        console.log('Sign out successful');
       });
-  };
-
-
-  const fetchUserData = async () => {
-    try {
-      // Get the currently signed-in user
-      const currentUser = auth().currentUser;
-  
-      if (!currentUser) {
-        console.log('No user is signed in.');
-        return;
-      }
-  
-      const userId = currentUser.uid;
-  
-      // Fetch the document from Firestore using the UID as the document ID
-      const documentSnapshot = await firestore().collection('users').doc(userId).get();
-  
-      if (documentSnapshot.exists) {
-        // Use the User type for better type safety
-        const userData = documentSnapshot.data() as User;
-  
-        console.log('User Data:', userData);
-        console.log('Name:', userData.name);
-        console.log('Height:', userData.height);
-        console.log('Weight:', userData.weight);
-        console.log('Calorie Intake:', userData.calorieIntake);
-      } else {
-        console.log('No such document for the current user!');
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
   };
 
   return (
@@ -63,10 +60,7 @@ const Profile = ({ navigation }: any) => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Profile</Text>
-        <TouchableOpacity onPress={() => {
-          fetchUserData()
-          //navigation.navigate('EditProfile')
-        }}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <Text style={styles.editProfile}>Edit profile</Text>
         </TouchableOpacity>
       </View>
@@ -77,7 +71,7 @@ const Profile = ({ navigation }: any) => {
           source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual image URL
           style={styles.profileImage}
         />
-        <Text style={styles.userName}>{state.fullName}</Text>
+        <Text style={styles.userName}>{userData?.name || 'Loading...'}</Text>
         <Text style={styles.userEmail}>{state.email}</Text>
       </View>
 
@@ -93,19 +87,19 @@ const Profile = ({ navigation }: any) => {
       <View style={styles.metricsContainer}>
         <View style={styles.metricCardTwo}>
           <Text style={styles.metricValue}>
-            {state.dailyCaloriesIntake} <Text style={styles.unit}>cal/day</Text>
+            {userData?.calorieIntake || 0} <Text style={styles.unit}>cal/day</Text>
           </Text>
           <Text style={styles.metricLabel}>Calories Per Day</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            {state.weight} <Text style={styles.unit}>kg</Text>
+            {userData?.weight || 0} <Text style={styles.unit}>kg</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Weight</Text>
         </View>
         <View style={styles.metricCard}>
           <Text style={styles.metricValue}>
-            {state.height} <Text style={styles.unit}>cm</Text>
+            {userData?.height || 0} <Text style={styles.unit}>cm</Text>
           </Text>
           <Text style={styles.metricLabel}>Current Height</Text>
         </View>
